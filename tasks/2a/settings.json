@@ -1,0 +1,8 @@
+{
+  "platform": "java8",
+  "file": "Task2a.java",
+  "limits": {
+    "time": 2,
+    "memory": 256
+  }
+}

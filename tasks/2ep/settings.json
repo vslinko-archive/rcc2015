@@ -1,0 +1,8 @@
+{
+  "platform": "python34",
+  "file": "task2ep.py",
+  "limits": {
+    "time": 2,
+    "memory": 256
+  }
+}

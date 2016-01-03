@@ -1,0 +1,112 @@
+#!/bin/bash
+
+task_name="$1"
+platform="$2"
+
+usage() {
+  echo "Usage: $0 TASK_NAME PLATFORM"
+  echo ""
+  echo "Available platforms: python34 java8"
+  exit 1
+}
+
+if [ "x$task_name" == "x" ]; then
+  usage
+fi
+
+case "$platform" in
+  python34)
+    file="task$task_name.py"
+    ;;
+  java8)
+    file="Task$task_name.java"
+    ;;
+  *) usage;;
+esac
+
+tasks_dir="$(dirname $0)/../tasks"
+task_dir="$tasks_dir/$task_name"
+tests_dir="$task_dir/tests"
+
+if [ -r "$task_dir" ]; then
+  echo "Task \"$task_name\" already exists"
+  exit 0
+fi
+
+mkdir -p "$tests_dir"
+
+cat << END > "$tests_dir/01"
+1
+END
+
+cat << END > "$tests_dir/01.a"
+result
+END
+
+cat << END > "$task_dir/settings.json"
+{
+  "platform": "$platform",
+  "file": "$file",
+  "limits": {
+    "time": 2,
+    "memory": 256
+  }
+}
+END
+
+case "$platform" in
+  python34)
+    cat << END > "$task_dir/$file"
+import sys
+
+def read_string():
+    return sys.stdin.readline().strip()
+
+def read_int():
+    return int(read_string())
+
+def read_ints(count):
+    string = read_string()
+    ints = list(map(int, string.split(' ')))
+    return ints
+
+def test():
+    return "result"
+
+def main():
+    t = read_int()
+
+    for i in range(t):
+        print(test())
+
+if __name__ == '__main__':
+    main()
+END
+    ;;
+  java8)
+    class_name="${file/.java}"
+    cat << END > "$task_dir/$file"
+import java.util.Scanner;
+
+public class $class_name {
+    Scanner in = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        new $class_name().run();
+    }
+
+    public void run() {
+        int t = in.nextInt();
+
+        for (int i = 0; i < t; i++) {
+            test();
+        }
+    }
+
+    public void test() {
+        System.out.print("result");
+    }
+}
+END
+    ;;
+esac

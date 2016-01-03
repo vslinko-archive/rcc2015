@@ -1,0 +1,8 @@
+{
+  "platform": "python34",
+  "file": "task1b.py",
+  "limits": {
+    "time": 2,
+    "memory": 256
+  }
+}

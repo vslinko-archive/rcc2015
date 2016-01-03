@@ -1,0 +1,21 @@
+#!/bin/bash
+
+txtred="\033[0;31m"
+txtgrn="\033[0;32m"
+txtrst="\033[0m"
+
+while true; do
+  result="$("$(dirname $0)/test" $@)"
+  result_code=$?
+  clear
+  date
+  echo
+  if [ $result_code -eq 0 ]; then
+    echo -en $txtgrn
+  else
+    echo -en $txtred
+  fi
+  echo "$result"
+  echo -en $txtrst
+  sleep 1
+done
